@@ -7,33 +7,47 @@
  */
 
 class Students_model extends MY_Model {
-    function __construct() {
-      parent::__construct();
-      $this->load->database();
-    }
-
-    function get_students($id = NULL) {
-        if(!is_null($id)) {
+        
+        function __construct() {
+            parent::__construct();
+            $this->load->database();
         }
-      $result = $this->db->get("students");
 
+    //selects one or multiple student records based on wether the id parameter is set
+    public function get_students($id = NULL) {
+       
+        if(!is_null($id)) {            
+            //if id is not null get the specific student
+            $result = $this->db->get_where('students', array('id' => $id));
+            return $result->row_array();
+        } else {
+            //else get all student records
+            $result = $this->db->get("students");
+        }
       return $result->result_array();
     }
 
-    function save_student($new_student) {
-        $this->db->insert('students', $new_student);
+    // Handels both update or insert request based on the wether id parameter is set
+    public function save_student($student) {
+        //if id is not null then its update request
+        if(!is_null($student->id)) {
+            $this->db->where('id', $student);
+            $this->db->update('students', $student);
+        } else {
+            //if id null then insert new record            
+            $this->db->insert('students', $student);
+        }
         return ($this->db->affected_rows() > 0) ? true : false; 
 
     }
 
-    function update_student($id, $data) {
-        $this->db->where('id', $id);
-       return $this->db->update('students', $data);
-        
+    public function update_student($id, $data) {
+            $this->db->where('id', $id);
+       return $this->db->update('students', $data);        
     }
 
-    function delete_student($id) {
-         $this->db->delete('students', array('id' => $id));
+    public function delete_student($id) {
+            $this->db->delete('students', array('id' => $id));
         return ($this->db->affected_rows() > 0) ? true : false;
     }
 

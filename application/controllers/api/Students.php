@@ -7,52 +7,56 @@
  */
 
 
-class Students extends API
-{
-    function __construct($config = 'rest')
-    {
-        parent::__construct($config);
-        $this->load->model('students_model');
-    }
+class Students extends API  {
 
-    function index_get($id = NULL)
-    {
-        $result['result'] = $this->students_model->get_students();
-        if(count($result)>0)
-        {
-            $first_record=$result['result'][0];
-            unset($first_record->id);
-            $result['columns']=array_keys((array)$first_record);
+
+        function __construct($config = 'rest') {
+            parent::__construct($config);
+            $this->load->model('students_model');
         }
+
+    public function index_get($id = NULL) {
+        
+        $result['result'] = $this->students_model->get_students($id);
+            if(count($result)>0)  {
+                $first_record=$result['result'][0];
+                unset($first_record->id);
+                $result['columns']=array_keys((array)$first_record);
+            }
         $this->response($result,API::HTTP_OK);
     
     }
-
-    function index_post() {
+    // Handels both update or insert request based on the wether id parameter is set 
+    public function index_post($id = NULL) {
 
         $this->load->library("form_validation");
-  
+        $result['success'] = false;
+
         $this->form_validation->set_rules("full_name", "Full Name", "required");
         $this->form_validation->set_rules("gender", "Gender", "required");
-            $result['success'] = false;
+        
           if($this->form_validation->run() === FALSE) {
-                $this->response($result, API::HTTP_OK);
+                $this->response($this->validation_errors(), API::HTTP_OK);
           } else {
-              $data = array(
-                'full_name' => $this->input->post('full_name'),
-                'gender' => $this->input->post('gender'),
-                'blood_group' => $this->input->post('blood_group'),
-                'birthdate' => $this->input->post('birthdate')
-                
-            );
+                $data = array(
+                    'id' => $id, 
+                    'full_name' => $this->input->post('full_name'),
+                    'gender' => $this->input->post('gender'),
+                    'blood_group' => $this->input->post('blood_group'),
+                    'birthdate' => $this->input->post('birthdate')
+                    
+                );
             $result['success'] = ($this->students_model->save_student($data)) ? true : false;
             $this->response($result, API::HTTP_OK);
-          }
-
-        
+          }      
 
     }
 
+    public function index_delete($id) {        
+        $result['sucess'] = ($this->students_model->delete_student($id)) ? true: false;
+        $this->response($result, API::HTTP_OK);
+    }
+    /*
     function index_put($id) {
         $this->input->raw_input_stream;
             $data = array(
@@ -65,12 +69,9 @@ class Students extends API
            $this->response($result, API::HTTP_OK);
 
     }
-
+    */
     
-    function index_delete($id) {
-        $result['sucess'] = ($this->students_model->delete_student($id)) ? true: false;
-        $this->response($result, API::HTTP_OK);
-    }
+    
 
 
 }
