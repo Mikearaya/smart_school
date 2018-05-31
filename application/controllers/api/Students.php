@@ -18,9 +18,9 @@ class Students extends API  {
     public function index_get($id = NULL) {
         
         $result['result'] = $this->students_model->get_students($id);
-            if(count($result)>0)  {
-                $first_record=$result['result'][0];
-                unset($first_record->id);
+        $first_record = '';
+            if(count($result)>0)  {                            
+                isset($result['result'][0]) ? $first_record=$result['result'][0] : $first_record=$result['result'] ;            
                 $result['columns']=array_keys((array)$first_record);
             }
         $this->response($result,API::HTTP_OK);
@@ -35,7 +35,8 @@ class Students extends API  {
         $this->form_validation->set_rules("full_name", "Full Name", "required");
         $this->form_validation->set_rules("gender", "Gender", "required");
         
-          if($this->form_validation->run() === FALSE) {
+          if($this->form_validation->run() == false) {
+              
                 $this->response($this->validation_errors(), API::HTTP_OK);
           } else {
                 $data = array(
@@ -52,7 +53,10 @@ class Students extends API  {
 
     }
 
-    public function index_delete($id) {        
+    public function index_delete($id = NULL) {
+            if(is_null($id)) {
+                $id = $this->input->input_stream('id');
+            }
         $result['sucess'] = ($this->students_model->delete_student($id)) ? true: false;
         $this->response($result, API::HTTP_OK);
     }

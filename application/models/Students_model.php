@@ -30,8 +30,8 @@ class Students_model extends MY_Model {
     // Handels both update or insert request based on the wether id parameter is set
     public function save_student($student) {
         //if id is not null then its update request
-        if(!is_null($student->id)) {
-            $this->db->where('id', $student);
+        if(!is_null($student['id'])) {
+            $this->db->where('id', $student['id']);
             $this->db->update('students', $student);
         } else {
             //if id null then insert new record            
@@ -47,7 +47,8 @@ class Students_model extends MY_Model {
     }
 
     public function delete_student($id) {
-            $this->db->delete('students', array('id' => $id));
+        $this->db->where_in('id', $id);
+        $this->db->delete('students');
         return ($this->db->affected_rows() > 0) ? true : false;
     }
 

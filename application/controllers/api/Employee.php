@@ -14,9 +14,8 @@ class Employee extends API
         $this->load->model('employee_model');
     }
 
-    function index_get()
-    {
-        $result['result'] = $this->employee_model->get_employee();
+    public function index_get($id = NULL) {
+        $result['result'] = $this->employee_model->get_employee($id);
         $result['columns']=[];
         if(count($result)>0)
         {
@@ -27,4 +26,29 @@ class Employee extends API
         $this->response($result,API::HTTP_OK);
     }
 
+    public function index_post($employeeId = NULL) {
+        $result['success'] = FALSE;
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('fullName', 'Employee Name', 'required' );
+        $this->form_validation->set_rules('gender', 'Employee gender', 'required');
+
+            if($this->form_validation->run() === FALSE) {
+                $this->response($this->validation_errors(), API::HTTP_OK);
+            } else {
+                $data = array(
+                    'id' => $employeeId,
+                    'full_name' => $this->input->post('fullName'),
+                    'blood_group' => $this->input->post('bloodGroup'),
+                    'employment_date' => $this->input->post('employmentDate'),
+                    'gender' => $this->input->post('gender')
+                );
+                $result['success'] = $this->employee_model->save_employee($data);
+                $this->response($result, API::HTTP_OK);
+        }
+    }
+
+    public function index_delete($id) {
+            $result['success'] = $this->employee_model->delete_employee($id);
+        $this->response($result, API::HTTP_OK);
+    }
 }
