@@ -19,8 +19,7 @@ class Students extends API  {
         
         $result['result'] = $this->students_model->get_students($id);
             if(count($result)>0)  {
-                $first_record=$result['result'][0];
-                unset($first_record->id);
+            $first_record= isset($result['result'][0]) ? $result['result'][0] : $result['result'];              
                 $result['columns']=array_keys((array)$first_record);
             }
         $this->response($result,API::HTTP_OK);
@@ -43,10 +42,10 @@ class Students extends API  {
                     'full_name' => $this->input->post('full_name'),
                     'gender' => $this->input->post('gender'),
                     'blood_group' => $this->input->post('blood_group'),
-                    'birthdate' => $this->input->post('birthdate')
+                    'birthdate' => $this->input->post('birthdate'),
                     
                 );
-            $result['success'] = ($this->students_model->save_student($data)) ? true : false;
+            $result['success'] = ($this->students_model->save_student($this->input->post(), $id)) ? true : false;
             $this->response($result, API::HTTP_OK);
           }      
 
@@ -56,20 +55,6 @@ class Students extends API  {
         $result['sucess'] = ($this->students_model->delete_student($id)) ? true: false;
         $this->response($result, API::HTTP_OK);
     }
-    /*
-    function index_put($id) {
-        $this->input->raw_input_stream;
-            $data = array(
-                'full_name' => $this->input->input_stream('full_name'),
-                'gender' => $this->input->input_stream('gender'),
-                'birthdate' => $this->input->input_stream('birthdate'),
-                'blood_group' => $this->input->input_stream('blood_group')
-            );
-           $result['success'] = $this->students_model->update_student($id, $data) ? true : false;
-           $this->response($result, API::HTTP_OK);
-
-    }
-    */
     
     
 
