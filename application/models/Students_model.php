@@ -52,8 +52,12 @@ class Students_model extends MY_Model {
                 $this->db->insert('students', $data);                
                 $last_id = $this->db->insert_id();                                             
             }
-            if($student['address'] == 'true') {
+            if(isset($student['hasAddress']) && $student['hasAddress'] == 'true') {
                 $this->set_address($action, $student['address'], $last_id);                        
+            }
+            if(isset($student['hasGuardian']) && $student['hasGuardian'] == 'true') {
+                $studentGuardian = new Guardian();
+                $studentGuardian->save_guardian($last_id);                
             }
             $this->db->trans_complete();
          return ($this->db->trans_status() === FALSE) ? false : $this->get_students($last_id);

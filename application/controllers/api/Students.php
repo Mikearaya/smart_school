@@ -21,6 +21,7 @@ class Students extends API  {
 
         if(count($result)>0)  {                            
                 isset($result['result'][0]) ? $first_record=$result['result'][0] : $first_record=$result['result'] ;            
+                
                 $result['columns']=array_keys((array)$first_record);
             }
         $this->response($result,API::HTTP_OK);
@@ -35,18 +36,9 @@ class Students extends API  {
         $this->form_validation->set_rules("full_name", "Full Name", "required");
         $this->form_validation->set_rules("gender", "Gender", "required");
         
-          if($this->form_validation->run() == false) {
-              
+          if($this->form_validation->run() == false) {              
                 $this->response($this->validation_errors(), API::HTTP_OK);
-          } else {
-                $data = array(
-                    'id' => $id, 
-                    'full_name' => $this->input->post('full_name'),
-                    'gender' => $this->input->post('gender'),
-                    'blood_group' => $this->input->post('blood_group'),
-                    'birthdate' => $this->input->post('birthdate'),
-                    
-                );
+          } else {                
             $result['success'] = ($this->students_model->save_student($this->input->post(), $id)) ? true : false;
             $this->response($result, API::HTTP_OK);
           }      
