@@ -15,16 +15,19 @@ class Guardian extends API  {
             $this->load->model('guardian_model');
         }
 
-    public function index_get($id = NULL) {
-        
+    public function index_get($id = NULL) {        
+        $this->get_guardian($id);
+    }    
+    function get_guardian($id = NULL) {
         $result['result'] = $this->guardian_model->get_guardian($id);
 
         if(count($result)>0)  {                            
             isset($result['result'][0]) ? $first_record=$result['result'][0] : $first_record=$result['result'] ;            
             $result['columns']=array_keys((array)$first_record);
         }
+        
         $this->response($result,API::HTTP_OK);    
-    }    
+    }
     // Handels both update or insert request based on the wether id parameter is set 
     public function index_post($id = NULL) {
             $this->save_guardian($id); 
@@ -40,9 +43,9 @@ class Guardian extends API  {
         $this->form_validation->set_rules("city", "City", "required");
         $this->form_validation->set_rules("sub_city", "Sub-City", "required");
         $this->form_validation->set_rules("wereda", "Wereda", "required");
-        $this->form_validation->set_rules("phone", "Phonenumber", "required");
+        $this->form_validation->set_rules("phone", "Phone Number", "required");
         $this->form_validation->set_rules("house_no", "House Number", "required");
-        
+        var_dump($this->input->post());
           if($this->form_validation->run() == false) {
               
                 $this->response($this->validation_errors(), API::HTTP_OK);

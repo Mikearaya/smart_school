@@ -17,10 +17,8 @@ class Guardian_model extends MY_Model {
     public function get_guardian($id = NULL) {
     //if id is not null get the specific guardian               
         if(!is_null($id)) {            
-            $result = $this->db->get_where('guardian', array('student_code' =>$id));
-            $reuslt1['guardian'] = [];
-            $result1[] = $result->row_array();
-            return $result1;
+            $result = $this->db->get_where('guardian', array('student_id' =>$id));
+            return $result;
         } else { //else get all guardian records//if id is not null get the specific guardian                        
             $result = $this->db->get("guardian");
         }
@@ -33,13 +31,12 @@ class Guardian_model extends MY_Model {
     public function save_guardian($guardian, $id = NULL) {
         //if id is not null then its update request
           $data = array(
-                    'id' => $id, 
-                    'student_code' => $guardian['studentId'],
+                    'student_code' => $id,
                     'full_name' => $guardian['full_name'],
                     'gender' => $guardian['gender'],
                     'date_of_birth' => isset($guardian['birthdate']) ? $guardian['birthdate'] : NULL,
                     'relation' => $guardian['relation'],
-                    'wereda' => $guardian['wereda  '],
+                    'wereda' => $guardian['wereda'],
                     'city' => $guardian['city'],
                     'sub_city' => $guardian['sub_city'],                                     
                     'house_no' => $guardian['house_no'],
@@ -54,17 +51,16 @@ class Guardian_model extends MY_Model {
                  $this->update_guardian($data, $last_id);
             } else {//if id null then insert new record            
                 $action = 'insert';                
-                $this->db->insert('guardian', $data);                
-                $last_id = $this->db->insert_id();                                             
+                $this->db->insert('guardian', $data);                                                                            
             }            
             $this->db->trans_complete();
-         return ($this->db->trans_status() === FALSE) ? false : $this->get_guardian($last_id);
+         return ($this->db->trans_status() === FALSE) ? false :true;
 
 
     }
 
     public function update_guardian($data, $id) {
-            $this->db->where('id', $id);
+            $this->db->where('student_code', $id);
        return $this->db->update('guardian', $data);        
     }
 
