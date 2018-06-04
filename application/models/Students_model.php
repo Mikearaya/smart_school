@@ -18,9 +18,9 @@ class Students_model extends MY_Model {
        
         if(!is_null($id)) {            
     //if id is not null get the specific student
-
-            $results = $this->db->get_where('students', array('id', $id));
-            $result['result'] = $results->row_array();
+            $this->db->where('id', $id);
+            $results = $this->db->get('students');
+            $result = $results->row_array();
       
             return $result;
         } else {
@@ -48,7 +48,7 @@ class Students_model extends MY_Model {
             'mobile' => $student['mobile'],  
         );
                 
-        
+        $this->db->trans_start();
         $action = NULL;
         $last_id = NULL;
             if(!is_null($id)) {
@@ -57,12 +57,12 @@ class Students_model extends MY_Model {
                  $this->update_student($data, $last_id);
             } else {//if id null then insert new record            
                $action = 'insert';
-                $this->db->trans_start();
+                
                 $this->db->insert('students', $data);                
                 $last_id = $this->db->insert_id();                                             
             }
             $this->db->trans_complete();
-         return ($this->db->trans_status() === FALSE) ? false : $this->get_students($last_id);
+         return ($this->db->trans_status() === FALSE) ? false : $last_id;
 
 
     }

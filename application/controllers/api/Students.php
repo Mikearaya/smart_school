@@ -18,8 +18,7 @@ class Students extends API  {
     public function index_get($id = NULL) {
         
         $result['result'] = $this->students_model->get_students($id);
-
-        if(count($result)>0)  {                                            
+        if(count($result['result'])>0)  {                                            
                 $result['columns'] = ['id', 'full_name', 'gender', 'id_no', 'blood_group', 'birthdate'];
             }
         $this->response($result,API::HTTP_OK);
@@ -43,7 +42,16 @@ class Students extends API  {
           if($this->form_validation->run() == false) {              
                 $this->response($this->validation_errors(), API::HTTP_OK);
           } else {                
-            $result['success'] = ($this->students_model->save_student($this->input->post(), $id)) ? true : false;
+            $sucess = $this->students_model->save_student($this->input->post(), $id);
+            
+            if(!$sucess) {
+                $result['success'] = false;
+            } else {
+                $result['success'] = true;
+                $result['studentId'] = $sucess;
+            }
+
+            
             $this->response($result, API::HTTP_OK);
           }      
 

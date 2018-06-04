@@ -17,8 +17,8 @@ class Guardian_model extends MY_Model {
     public function get_guardian($id = NULL) {
     //if id is not null get the specific guardian               
         if(!is_null($id)) {            
-            $result = $this->db->get_where('guardian', array('student_id' =>$id));
-            return $result;
+            $result = $this->db->get_where('guardian', array('student_code' =>$id));
+            return $result->row_array();
         } else { //else get all guardian records//if id is not null get the specific guardian                        
             $result = $this->db->get("guardian");
         }
@@ -31,7 +31,7 @@ class Guardian_model extends MY_Model {
     public function save_guardian($guardian, $id = NULL) {
         //if id is not null then its update request
           $data = array(
-                    'student_code' => $id,
+                    'student_code' => $guardian['student_code'],
                     'full_name' => $guardian['full_name'],
                     'gender' => $guardian['gender'],
                     'date_of_birth' => isset($guardian['birthdate']) ? $guardian['birthdate'] : NULL,
@@ -40,7 +40,8 @@ class Guardian_model extends MY_Model {
                     'city' => $guardian['city'],
                     'sub_city' => $guardian['sub_city'],                                     
                     'house_no' => $guardian['house_no'],
-                    'phone' => $guardian['phone']                    
+                    'phone' => $guardian['phone'],
+                    'region' => $guardian['region']                          
                 );
         $action = NULL;
         $last_id = NULL;
@@ -60,13 +61,13 @@ class Guardian_model extends MY_Model {
     }
 
     public function update_guardian($data, $id) {
-            $this->db->where('student_code', $id);
+            $this->db->where('id', $id);
        return $this->db->update('guardian', $data);        
     }
 
  
     public function delete_guardian($id) {
-        $this->db->where_in('id', $id);
+        $this->db->where('id', $id);
         $this->db->delete('guardian');
         return ($this->db->affected_rows() > 0) ? true : false;
     }

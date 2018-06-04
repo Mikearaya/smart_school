@@ -45,7 +45,7 @@ class Guardian extends API  {
         $this->form_validation->set_rules("wereda", "Wereda", "required");
         $this->form_validation->set_rules("phone", "Phone Number", "required");
         $this->form_validation->set_rules("house_no", "House Number", "required");
-        var_dump($this->input->post());
+
           if($this->form_validation->run() == false) {
               
                 $this->response($this->validation_errors(), API::HTTP_OK);
