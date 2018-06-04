@@ -17,10 +17,8 @@ class Subjects extends API
     function index_get($id = NULL)
     {
         $result["result"]= $this->subjects_model->get_subject($id);
-        if(count($result)>0)
-        {
-            $first_record=$result['result'][0];
-            unset($first_record->id);
+        if(count($result)>0) {
+            $first_record= (isset($result['result'][0])) ? $result['result'][0] : $result['result'];
             $result['columns']=array_keys((array)$first_record);
         }
         $this->response($result,API::HTTP_OK);
