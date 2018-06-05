@@ -23,6 +23,14 @@ class Subjects extends API
         }
         $this->response($result,API::HTTP_OK);
     }
+
+
+    function view($id)
+    {
+        $result= $this->subjects_model->get_subject($id);
+        var_dump($result);
+        $this->response($result,API::HTTP_OK);
+    }
     function index_post($id = NULL) {
         $result['success'] = false;
         $this->load->library('form_validation');
