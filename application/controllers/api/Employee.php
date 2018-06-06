@@ -19,7 +19,7 @@ class Employee extends API
         $result['columns']=[];
         if(count($result)>0)
         {
-            $first_record=$result['result'][0];
+            $first_record=isset($result['result'][0]) ? $result['result'][0] : $result['result'];
             unset($first_record->id);
             $result['columns']=array_keys((array)$first_record);
         }
@@ -38,9 +38,12 @@ class Employee extends API
                 $data = array(
                     'id' => $employeeId,
                     'full_name' => $this->input->post('fullName'),
-                    'blood_group' => $this->input->post('bloodGroup'),
-                    'employment_date' => $this->input->post('employmentDate'),
-                    'gender' => $this->input->post('gender')
+                    'birth_date' => $this->input->post('birthdate'),
+                    'gender' => $this->input->post('gender'),
+                    'address_code' => $this->input->post('address_code'),
+                    'employment_date' => $this->input->post('employment_Date'),
+                    'blood_group' => $this->input->post('blood_group'),
+
                 );
                 $result['success'] = $this->employee_model->save_employee($data);
                 $this->response($result, API::HTTP_OK);
