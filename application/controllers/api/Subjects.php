@@ -15,73 +15,42 @@ class Subjects extends API
         $this->load->model('subjects_model');
     }
 
-    function index_get()
+    function index_get($id = NULL)
     {
-        $result= $this->subjects_model->lists();
-        $result['columns']=[];
-        if($result['total_row']>0)
-        {
-            $first_record=$result['result'][0];
-            unset($first_record->id);
+        $result["result"]= $this->subjects_model->get_subject($id);
+        if(count($result)>0) {
+            $first_record= (isset($result['result'][0])) ? $result['result'][0] : $result['result'];
+
             $result['columns']=array_keys((array)$first_record);
         }
         $this->response($result,API::HTTP_OK);
     }
 
-    
-            // Inserting subjects Data
-
-    public function index_post()
+    function view($id)
     {
-        $id = $this->post('id');
-            
-        $subjectsData = array(
-             'title' => $this->post('title'),
-             'grade_weightage' => $this->post('grade_weightage'),
-             'code' => $this->post('code'),
-             'subject_type' => $this->post('subject_type')
-            );
-
-        if (!empty($subjectsData['title']) && !empty($subjectsData['grade_weightage']) && !empty($subjectsData['code']) && !empty($subjectsData['subject_type'])) {
-            $insert = $this->Subjects_model->insert($subjectsData);
-            
-            if ($insert) {
-                $this->response([
-                    'status' => true,
-                    'message' => 'Subject has been added successfully.'
-                ], REST_Controller::HTTP_OK);
-            } else {
-                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
-            }
-        } else {
-            $this->response("Provide complete Subject information to create.", REST_Controller::HTTP_BAD_REQUEST);
-        }
+        $result= $this->subjects_model->get_subject($id);
+        var_dump($result);
+        $this->response($result,API::HTTP_OK);
     }
-            // Updating subjects Data
+    function index_post($id = NULL) {
+        $result['success'] = false;
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('title', 'Subject Name', 'required');
+        $this->form_validation->set_rules('subject_type', 'Subject type', 'required');
+        $this->form_validation->set_rules('grade_weightage', 'Subject Credit Hr.', 'required');
 
-    // Deleting subjects Data
-    public function subject_delete()
-    {
-        $id = $this->delete('id');
-        
-        if ($id) {
-            $delete = $this->Subjects_model->delete($id);
-
-            if ($delete) {
-                $this->response([
-                    'status' => true,
-                    'message' => 'Subject has been removed successfully.'
-                ], REST_Controller::HTTP_OK);
-            } else {
-                $this->response("Some problems occurred, please try again.", REST_Controller::HTTP_BAD_REQUEST);
-            }
+        if ($this->form_validation->run() === false ) {
+            $this->response($this->validation_errors(), API::HTTP_OK);
         } else {
-            $this->response([
-                'status' => false,
-                'message' => 'No Subject were found.'
-            ], REST_Controller::HTTP_NOT_FOUND);
+            $success = $this->subjects_model->save_subjects($this->input->post(), $id);
+            if($success) {
+                $result['success'] = true;
+                $result['subjectId'] = $success;
+            }
+            $this->response($result, API::HTTP_OK);
         }
-    }  
 
+        
+    }
 
 }
