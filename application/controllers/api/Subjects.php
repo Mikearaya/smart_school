@@ -24,19 +24,12 @@ class Subjects extends API
         $this->response($result,API::HTTP_OK);
     }
 
-
-    function view($id)
-    {
-        $result= $this->subjects_model->get_subject($id);
-        var_dump($result);
-        $this->response($result,API::HTTP_OK);
-    }
     function index_post($id = NULL) {
         $result['success'] = false;
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('title', 'Subject Name', 'required');
-        $this->form_validation->set_rules('subject_type', 'Subject type', 'required');
-        $this->form_validation->set_rules('grade_weightage', 'Subject Credit Hr.', 'required');
+        $this->form_validation->set_rules('title[]', 'Subject Name', 'required');
+        $this->form_validation->set_rules('subject_type[]', 'Subject type', 'required');
+        $this->form_validation->set_rules('grade_weightage[]', 'Subject Credit Hr.', 'required');
 
         if ($this->form_validation->run() === false ) {
             $this->response($this->validation_errors(), API::HTTP_OK);
