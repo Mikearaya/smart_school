@@ -8,6 +8,7 @@
 
 class Subjects extends API
 {
+    
     function __construct($config = 'rest')
     {
         parent::__construct($config);
@@ -19,11 +20,21 @@ class Subjects extends API
         $result["result"]= $this->subjects_model->get_subject($id);
         if(count($result)>0) {
             $first_record= (isset($result['result'][0])) ? $result['result'][0] : $result['result'];
+
             $result['columns']=array_keys((array)$first_record);
         }
         $this->response($result,API::HTTP_OK);
     }
 
+<<<<<<< HEAD
+=======
+    function view($id)
+    {
+        $result= $this->subjects_model->get_subject($id);
+        var_dump($result);
+        $this->response($result,API::HTTP_OK);
+    }
+>>>>>>> 5b162a549861af752e462ed08dc20a2d842056f7
     function index_post($id = NULL) {
         $result['success'] = false;
         $this->load->library('form_validation');
