@@ -33,23 +33,27 @@ class Subjects_model extends MY_Model
     }
 
     function save_subjects( $input, $id = NULL ) {
-            $data = $this->initialize_data_model($input);
+
+        $data = $this->initialize_data_model($input);
             $last_id = NULL;
             $this->db->trans_begin();
+
                 try {
             if($id) {
+                echo 'update';
                 $this->update_subjects($data, $id);
                 $last_id = $id;
             } else {
-                $this->db->insert('subjects', $data);
-                $last_id = $this->db->insert_id();
+                echo 'insert';
+                print_r($data);
+                $this->db->insert_batch('subjects', $data);
             }
             } catch(Exception $e) {
+                $this->db->trans_rollback();
                 echo $e->getMessage();
             }
             $this->db->trans_complete();
-
-        return ($this->db->trans_status() === FALSE) ? false : $last_id;
+        return ($this->db->trans_status() === FALSE) ? FALSE : $last_id;
     }
 
     function update_subjects($input, $id) {
@@ -59,11 +63,16 @@ class Subjects_model extends MY_Model
     }
 
     private function initialize_data_model($input_data) {
-        return array(
-            "title" => $input_data['title'],
-            "subject_type" => $input_data['subject_type'],
-            "grade_weightage" => $input_data['grade_weightage']
-        );
+        $data;
+        $dataArray = [];
+        for ($i = 0; $i < count($input_data['title']); $i++) {
+            $data[$i]['title'] = $input_data['title'][$i];
+            $data[$i]['subject_type'] = $input_data['subject_type'][$i];
+            $data[$i]['grade_weightage'] = $input_data['grade_weightage'][$i];
+
+        }
+    
+        return $data;
     }
 
 }
