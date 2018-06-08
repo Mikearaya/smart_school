@@ -20,15 +20,16 @@ class Subjects_model extends MY_Model
     }
 
     function get_subject($id = NULL) {
+        $result = NULL;
         if (!is_null($id)) {
             $this->db->where('id', $id);
             $result = $this->db->get('subjects');
-            return $result->row_array();
+            
         } else {
             $result = $this->db->get("subjects");
-            return $result->result_array();
+            
         }
-      
+        return $result->result_array();
     }
 
     function save_subjects( $input, $id = NULL ) {
