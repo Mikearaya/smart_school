@@ -15,11 +15,11 @@ class Employee_model extends MY_Model
     }
 
     public function get_employee($id = NULL) {
-
+      print_r($id);
           if(!is_null($id)) {
               $this->db->where('id', $id);
               $result = $this->db->get('employees');
-            return $result->row_array();
+            return $result->result_array();
           }
       
         $result = $this->db->get('employees');
@@ -48,7 +48,7 @@ class Employee_model extends MY_Model
           if(!is_null($employee['id'])) {
             try {
               $this->db->where('id', $employee['id']);
-              $success = $this->update('employees', $employee );
+              $success = $this->update('employees', $c );
             } catch(Exception $e) {
               echo $e->getMessage();
             }
@@ -58,8 +58,7 @@ class Employee_model extends MY_Model
 
     }
     public function delete_employee($id) {
-        $this->db->delete('employees', array('id' => $id));
-      return ($this->db->affected_rows() > 0 ) ? true : false;
-    }
-
+      $this->db->delete('epmloyee', array('id' => $id));
+  return ($this->db->affected_rows() > 0) ? true : false;
+}
 }

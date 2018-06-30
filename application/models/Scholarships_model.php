@@ -1,6 +1,6 @@
 <?php
 
-class Scholarship_model extends MY_Model
+class Scholarships_model extends MY_Model
 {
 
     function __construct() {
@@ -8,7 +8,7 @@ class Scholarship_model extends MY_Model
       $this->load->database();
     }
 
-    public function get_scholarship($id = NULL) {
+    public function get_scholarships($id = NULL) {
 
           if(!is_null($id)) {
               $this->db->where('id', $id);
@@ -20,7 +20,7 @@ class Scholarship_model extends MY_Model
       return $result->result_array();
     }
 
-    public function save_scholarship($scholarship) {
+    public function save_scholarships($scholarship) {
         $result = FALSE;
           try{
           if(!is_null($scholarship['id'])) {
@@ -51,7 +51,7 @@ class Scholarship_model extends MY_Model
       return $success;
 
     }
-    public function delete_scholarship($id) {
+    public function delete_scholarships($id) {
         $this->db->delete('scholarships', array('id' => $id));
       return ($this->db->affected_rows() > 0 ) ? true : false;
     }
