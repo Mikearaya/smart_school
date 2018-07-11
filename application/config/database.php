@@ -75,7 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '192.168.1.4',
+	'hostname' => '197.156.82.1',
 	'username' => 'root',
 	'password' => 'root',
 	'database' => 'smart_school',
