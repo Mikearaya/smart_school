@@ -23,8 +23,9 @@ class Scholarship_coverage extends API
         $this->load->library('form_validation');
         $result['success'] = false;
     
-        $this->form_validation->set_rules('scholarship_code', 'scholarship code', 'required');
-        $this->form_validation->set_rules('fee_type_code', 'fee type code', 'required');
+        $this->form_validation->set_rules('scholarship', 'scholarship', 'required');
+       // $this->form_validation->set_rules('scholarship_type', 'scholarship type', 'required');
+       // $this->form_validation->set_rules('fee_type', 'fee type', 'required');
         $this->form_validation->set_rules('amount', 'amount', 'required');
         $this->form_validation->set_rules('amount_type', 'amount type', 'required');
     
@@ -33,8 +34,9 @@ class Scholarship_coverage extends API
             } else {
                 $data = array(
                     'id' => $id,
-                    'scholarship_code' => $this->input->post('scholarship_code'),
-                    'fee_type_code' => $this->input->post('fee_type_code'),
+                    'scholarship' => $this->input->post('scholarship'),
+                    'scholarship_type' => $this->input->post('scholarship_type'),
+                    'fee_type' => $this->input->post('fee_type'),
                     'amount' =>$this->input->post('amount'),
                     'amount_type' => $this->input->post('amount_type'),
                 );

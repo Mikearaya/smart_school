@@ -11,7 +11,7 @@ class Scholarship_coverage_model extends MY_Model
     {
         $table = [
             'from' => 'scholarship_coverage',
-            'select' => ['id', 'scholarship_code', 'fee_type_code', 'amount', 'amount_type']
+            'select' => ['id', 'scholarship', 'scholarship_type', 'fee_type', 'amount', 'amount_type']
         ];
         return $this->select($table);
     }
