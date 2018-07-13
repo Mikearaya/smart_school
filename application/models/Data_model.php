@@ -11,7 +11,7 @@ class Data_model extends MY_Model {
     public  function filter_data($table, $filter_string = '', $sort_column = '', $sort_order = 'asc', $page_index = '', $page_size = '') {
     
         
-        $this->db->order_by($sort_column, $sort_order);
+  
 
         if($page_index === 0) {
             $start = 0;
@@ -20,8 +20,9 @@ class Data_model extends MY_Model {
         }
         $cloned = $this->db;
         $result['total'] = $cloned->count_all_results($table);
-        $this->db->limit($page_size , $start);
-        $result_set;	
+
+        $this->db->order_by($sort_column, $sort_order);
+        $this->db->limit($page_size , $start);        
 
                     $result_set = $this->db->get($table);
             $result['data'] = $result_set->result_array();
